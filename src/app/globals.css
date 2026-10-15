@@ -1,0 +1,413 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+/*
+  Programmato è la rete editoriale che raccoglie OstiaRoma, PoRusski, CityRome,
+  MondoSapere e LucaTerribili: testate diverse, temi diversi, la stessa
+  infrastruttura editoriale (Spring Boot REST API + Postgres, scritta da un CMS
+  Laravel). La palette punta a un registro editoriale/istituzionale imponente:
+  fondo quasi-nero, un rosso redazionale come accento principale, e un colore
+  dedicato a ciascuna testata per riconoscerla a colpo d'occhio nei contenuti
+  aggregati.
+*/
+:root {
+  --ink: #07090d;
+  --surface: #10141c;
+  --surface-2: #171c27;
+  --border: rgba(148,177,209,0.14);
+  --text: #e7ecf3;
+  --muted: #8b95a6;
+  --accent: #d81f2c;
+  --accent-dim: rgba(216,31,44,0.14);
+
+  --ostiaroma: #1a6b8a;
+  --porusski: #1746c9;
+  --cityrome: #c2883f;
+  --mondosapere: #2f8a5b;
+  --flagship: #ffb020;
+  --ai: #6d5ef2;
+}
+
+@theme inline {
+  --font-heading: 'Archivo', sans-serif;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-sans);
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  margin: 0;
+  text-wrap: balance;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* --- MASTHEAD --- */
+.masthead {
+  border-bottom: 2px solid var(--accent);
+  position: sticky;
+  top: 0;
+  background: rgba(7, 9, 13, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.masthead-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+}
+
+.masthead-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.masthead-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.masthead-logo {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.masthead-logo span {
+  color: var(--accent);
+}
+
+.masthead-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.masthead-nav a:hover {
+  color: var(--text);
+}
+
+/* --- HERO --- */
+.hero {
+  padding: 96px 24px 64px;
+  text-align: center;
+  background: radial-gradient(ellipse 60% 50% at 50% 0%, var(--accent-dim), transparent);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  margin-bottom: 28px;
+}
+
+.eyebrow .eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.hero h1 {
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.hero h1 .accent {
+  color: var(--accent);
+}
+
+.hero p {
+  max-width: 680px;
+  margin: 24px auto 0;
+  color: var(--muted);
+  font-size: 1.15rem;
+  line-height: 1.65;
+}
+
+/* --- SECTIONS --- */
+.section {
+  padding: 56px 24px 96px;
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.section-tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.section-head h2 {
+  font-size: 2.1rem;
+  font-weight: 700;
+}
+
+.section-head p {
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* --- CONTENT GRID / ARTICLE CARD --- */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.article-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  --brand: var(--flagship);
+}
+
+.article-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+}
+
+.article-card.ostiaroma { --brand: var(--ostiaroma); }
+.article-card.porusski { --brand: var(--porusski); }
+.article-card.cityrome { --brand: var(--cityrome); }
+.article-card.mondosapere { --brand: var(--mondosapere); }
+.article-card.flagship { --brand: var(--flagship); }
+.article-card.ai { --brand: var(--ai); }
+
+.article-cover {
+  aspect-ratio: 16 / 9;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.article-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.article-body {
+  padding: 22px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 3px solid var(--brand);
+  flex: 1;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.article-outlet {
+  color: var(--brand);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.article-date {
+  color: var(--muted);
+}
+
+.article-body h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.article-body p {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.article-tag {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--muted);
+  padding: 48px 24px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+}
+
+/* --- OUTLET CARD --- */
+.outlet-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  --brand: var(--flagship);
+}
+
+.outlet-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+}
+
+.outlet-card.ostiaroma { --brand: var(--ostiaroma); }
+.outlet-card.porusski { --brand: var(--porusski); }
+.outlet-card.cityrome { --brand: var(--cityrome); }
+.outlet-card.mondosapere { --brand: var(--mondosapere); }
+.outlet-card.flagship { --brand: var(--flagship); }
+.outlet-card.ai { --brand: var(--ai); }
+
+.outlet-mark {
+  width: 36px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--brand);
+}
+
+.outlet-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.outlet-tagline {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* --- ABOUT / STATS --- */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-stat {
+  text-align: center;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.about-stat strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.about-stat span {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+}
+
+/* --- FOOTER --- */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-outlets {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .masthead-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .masthead-nav {
+    gap: 20px;
+  }
+}
