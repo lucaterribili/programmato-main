@@ -1,0 +1,22 @@
+name: Deploy Programmato Main
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH with private key
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.OVH_FRONTEND_KEY }}
+
+      - name: Run deploy script
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.OVH_FRONTEND_PORT }} ${{ secrets.OVH_FRONTEND_USER }}@${{ secrets.OVH_FRONTEND_HOST }} "
+            cd ~/
+            python3 ~/deploy.py programmato-main
+          "
