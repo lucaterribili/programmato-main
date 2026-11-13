@@ -1626,6 +1626,27 @@
   color: inherit;
 }
 
+/* Diagrammi (Mermaid): centrati, scalati alla colonna, con la didascalia al centro */
+.prose-page figure.diagram {
+  margin: 1.75rem 0;
+  overflow-x: auto;
+}
+
+.prose-page figure.diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.prose-page figure.diagram figcaption {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-style: italic;
+  opacity: 0.75;
+}
+
 /* ------------------------------------------------------------------ */
 /* Footer                                                             */
 /* ------------------------------------------------------------------ */
