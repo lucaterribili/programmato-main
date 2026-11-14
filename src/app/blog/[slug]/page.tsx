@@ -11,7 +11,10 @@ import { articleService } from '@/lib/services';
 import { formatDate } from '@/lib/services/content';
 import { renderContent } from '@/lib/render';
 import { ArticleCard } from '@/components/ArticleCard';
+import { ArticleActions } from '@/components/ArticleActions';
+import { NewsletterWidget } from '@/components/NewsletterWidget';
 import imageService from '@/lib/services/image';
+import config from '@/lib/config';
 import type { Article } from '@/lib/types';
 
 interface PageProps {
@@ -152,13 +155,24 @@ export default async function ArticlePage({ params }: PageProps) {
             </div>
           )}
 
-          <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem]">
+          <div className="article-layout mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem]">
             <article>
               {html ? (
-                <div
-                  className="prose-page max-w-3xl"
-                  dangerouslySetInnerHTML={{ __html: html }}
-                />
+                <>
+                  <div
+                    id="article-content"
+                    className="prose-page max-w-3xl"
+                    dangerouslySetInnerHTML={{ __html: html }}
+                  />
+                  <div className="max-w-3xl">
+                    <ArticleActions
+                      title={article.title}
+                      url={`${config.siteUrl}/blog/${article.slug}`}
+                      contentId="article-content"
+                      publishedAt={article.publishedAt}
+                    />
+                  </div>
+                </>
               ) : (
                 <div className="empty-state">
                   <span className="eyebrow">Testo in arrivo</span>
@@ -189,7 +203,10 @@ export default async function ArticlePage({ params }: PageProps) {
               )}
             </article>
 
-            <aside className="space-y-8 lg:sticky lg:top-24 lg:self-start">
+            <aside
+              className="space-y-8 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto"
+              data-reader-hide
+            >
               {toc.length > 0 && (
                 <div>
                   <div className="mb-3 flex items-center gap-2">
@@ -241,13 +258,30 @@ export default async function ArticlePage({ params }: PageProps) {
                   )}
                 </div>
               )}
+
+              {article.tags && article.tags.length > 0 && (
+                <div>
+                  <h2 className="mb-3 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-navy">
+                    Argomenti
+                  </h2>
+                  <div className="flex flex-wrap gap-2">
+                    {article.tags.map((tag) => (
+                      <Link key={tag.id} href={`/blog?tag=${tag.slug}`} className="pill">
+                        {tag.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <NewsletterWidget />
             </aside>
           </div>
         </div>
       </section>
 
       {article.relatedArticles && article.relatedArticles.length > 0 && (
-        <section className="section section-soft">
+        <section className="section section-soft" data-reader-hide>
           <div className="container-page">
             <div className="section-head">
               <div>

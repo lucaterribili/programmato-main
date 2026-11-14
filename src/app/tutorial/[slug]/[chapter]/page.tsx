@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import tutorialService from '@/lib/services/tutorial';
 import { renderContent } from '@/lib/render';
+import { ArticleActions } from '@/components/ArticleActions';
+import config from '@/lib/config';
 
 interface PageProps {
   params: Promise<{ slug: string; chapter: string }>;
@@ -41,9 +43,14 @@ export default async function TutorialChapterPage({ params }: PageProps) {
 
       <section className="section">
         <div className="container-page max-w-3xl">
-          <div className="prose-page" dangerouslySetInnerHTML={{ __html: html }} />
+          <div id="article-content" className="prose-page" dangerouslySetInnerHTML={{ __html: html }} />
+          <ArticleActions
+            title={data.title}
+            url={`${config.siteUrl}/tutorial/${book.slug}/${chapter}`}
+            contentId="article-content"
+          />
 
-          <nav className="mt-12 flex flex-wrap justify-between gap-4" aria-label="Capitoli">
+          <nav className="mt-12 flex flex-wrap justify-between gap-4" aria-label="Capitoli" data-reader-hide>
             {data.prev ? (
               <Link href={`/tutorial/${book.slug}/${data.prev.slug}`} className="link-more">
                 <ArrowLeft size={14} aria-hidden="true" />

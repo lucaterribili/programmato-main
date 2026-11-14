@@ -40,6 +40,11 @@ function fitDiagrams(html: string): string {
   });
 }
 
+/** Ogni tabella sta in un contenitore che scorre in orizzontale: su telefono una tabella larga non allarga la pagina. */
+function wrapTables(html: string): string {
+  return html.replace(/<table\b/g, '<div class="table-wrap"><table').replace(/<\/table>/g, '</table></div>');
+}
+
 /**
  * Render article/tutorial body content coming from the backend.
  * Il backend invia Markdown (a volte con HTML dentro); il risultato viene sanitizzato.
@@ -54,9 +59,11 @@ export async function renderContent(raw?: string | null): Promise<string> {
 
   const html = await marked.parse(withLinks);
 
-  return fitDiagrams(
-    DOMPurify.sanitize(html, {
-      ADD_ATTR: ['target', 'rel'],
-    }),
+  return wrapTables(
+    fitDiagrams(
+      DOMPurify.sanitize(html, {
+        ADD_ATTR: ['target', 'rel'],
+      }),
+    ),
   );
 }

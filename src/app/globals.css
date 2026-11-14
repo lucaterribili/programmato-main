@@ -1647,6 +1647,134 @@
   opacity: 0.75;
 }
 
+/* Tabelle: contenitore che scorre in orizzontale, intestazione in evidenza, righe alternate */
+.prose-page .table-wrap {
+  margin: 0 0 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 0.75rem;
+}
+
+.prose-page table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.prose-page th,
+.prose-page td {
+  padding: 0.6rem 0.95rem;
+  border: 1px solid var(--color-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose-page th {
+  background: var(--color-paper-soft);
+  color: var(--color-navy);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.prose-page tbody tr:nth-child(even) {
+  background: var(--color-paper-soft);
+}
+
+/* le righe di bordo del contenitore fanno già da cornice */
+.prose-page .table-wrap tr:first-child > *,
+.prose-page .table-wrap tr:first-child th {
+  border-top: 0;
+}
+.prose-page .table-wrap tr > *:first-child {
+  border-left: 0;
+}
+.prose-page .table-wrap tr > *:last-child {
+  border-right: 0;
+}
+.prose-page .table-wrap tr:last-child > * {
+  border-bottom: 0;
+}
+
+/* Azioni dell'articolo (modalità lettura, PDF) */
+.article-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.article-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 0.6rem;
+  background: var(--color-paper);
+  color: var(--color-navy);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.article-action:hover {
+  background: var(--color-paper-soft);
+  border-color: var(--color-navy);
+}
+
+.article-action:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.reader-exit {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  background: var(--color-navy);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 6px 20px rgba(15, 37, 55, 0.3);
+}
+
+.reader-exit:hover {
+  background: var(--color-ink);
+}
+
+/* Modalità lettura: via intestazione del sito, barra laterale, correlati e piè di pagina; testo centrato e più comodo */
+html.reader-mode [data-reader-hide],
+html.reader-mode body > header,
+html.reader-mode .footer {
+  display: none !important;
+}
+
+html.reader-mode .article-layout {
+  display: block;
+}
+
+html.reader-mode .article-layout > article {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 46rem;
+}
+
+html.reader-mode .prose-page {
+  font-size: 1.1rem;
+  line-height: 1.9;
+}
+
 /* ------------------------------------------------------------------ */
 /* Footer                                                             */
 /* ------------------------------------------------------------------ */
