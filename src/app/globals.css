@@ -1647,6 +1647,18 @@
   opacity: 0.75;
 }
 
+/* Negli articoli il testo ha una misura comoda (48rem) ma le tabelle occupano tutta la larghezza della colonna */
+.prose-wide > *:not(.table-wrap):not(figure.table) {
+  max-width: 48rem;
+}
+
+/* l'editor avvolge ogni tabella in <figure class="table"> (display: table): qui è un semplice blocco a tutta larghezza */
+.prose-page figure.table {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+
 /* Tabelle: contenitore che scorre in orizzontale, intestazione in evidenza, righe alternate */
 .prose-page .table-wrap {
   margin: 0 0 1.5rem;

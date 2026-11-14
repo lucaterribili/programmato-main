@@ -161,7 +161,7 @@ export default async function ArticlePage({ params }: PageProps) {
                 <>
                   <div
                     id="article-content"
-                    className="prose-page max-w-3xl"
+                    className="prose-page prose-wide"
                     dangerouslySetInnerHTML={{ __html: html }}
                   />
                   <div className="max-w-3xl">
