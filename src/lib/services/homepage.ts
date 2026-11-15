@@ -4,6 +4,7 @@ import {
   type RawCategory, type RawPost, type RawTutorial,
 } from './backend';
 import type { HomepageData } from '@/lib/types';
+import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/config';
 
 interface RawHomepage {
   categories?: RawCategory[];
@@ -23,11 +24,11 @@ const EMPTY: HomepageData = {
 };
 
 class HomepageService {
-  async getBasic(): Promise<HomepageData> {
+  async getBasic(locale: Locale = DEFAULT_LOCALE): Promise<HomepageData> {
     try {
       const [home, tags] = await Promise.all([
-        apiGet<RawHomepage>('/homepage/basic'),
-        apiGet<Array<{ id: number; slug: string; title: string }>>('/tag/list').catch(() => []),
+        apiGet<RawHomepage>('/homepage/basic', locale),
+        apiGet<Array<{ id: number; slug: string; title: string }>>('/tag/list', locale).catch(() => []),
       ]);
       const last = (home.lastPosts ?? []).map(mapPost);
       return {
@@ -50,8 +51,8 @@ class HomepageService {
     }
   }
 
-  getFull(): Promise<HomepageData> {
-    return this.getBasic();
+  getFull(locale: Locale = DEFAULT_LOCALE): Promise<HomepageData> {
+    return this.getBasic(locale);
   }
 }
 

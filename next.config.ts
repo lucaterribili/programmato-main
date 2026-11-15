@@ -7,11 +7,17 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: 'https', hostname: 'fridaymedia.s3.eu-west-par.io.cloud.ovh.net' }],
   },
   async redirects() {
-    // Autori e newsletter non hanno (ancora) un backend: niente pagine rotte.
+    // Autori e newsletter non hanno (ancora) un backend: niente pagine rotte, in ogni lingua.
     return [
       { source: "/author", destination: "/chi-siamo", permanent: false },
       { source: "/author/:slug", destination: "/chi-siamo", permanent: false },
       { source: "/newsletter", destination: "/", permanent: false },
+      { source: "/en/author", destination: "/en/about", permanent: false },
+      { source: "/en/author/:slug", destination: "/en/about", permanent: false },
+      { source: "/en/newsletter", destination: "/en", permanent: false },
+      { source: "/ru/author", destination: "/ru/o-nas", permanent: false },
+      { source: "/ru/author/:slug", destination: "/ru/o-nas", permanent: false },
+      { source: "/ru/newsletter", destination: "/ru", permanent: false },
     ];
   },
 };

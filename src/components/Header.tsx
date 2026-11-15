@@ -3,18 +3,25 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, Search } from 'lucide-react';
-
-const NAV_ITEMS = [
-  { href: '/blog', label: 'Field notes' },
-  { href: '/tutorial', label: 'Playbook' },
-  { href: '/chi-siamo', label: 'Manifesto' },
-];
+import { useHref, useI18n } from '@/lib/i18n/client';
+import { toInternalSegments } from '@/lib/i18n/paths';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Header() {
   const pathname = usePathname();
+  const href = useHref();
+  const { locale, messages } = useI18n();
+  const t = messages.header;
 
-  const isActive = (href: string) =>
-    pathname === href || (href !== '/' && pathname.startsWith(`${href}/`));
+  const navItems = [
+    { path: '/blog', label: messages.nav.fieldNotes },
+    { path: '/tutorial', label: messages.nav.playbook },
+    { path: '/chi-siamo', label: messages.nav.manifesto },
+  ];
+
+  // la sezione corrente, qualunque forma abbia il percorso (pubblico o riscritto dal proxy)
+  const currentSection = toInternalSegments(pathname, locale)[0];
+  const isActive = (target: string) => currentSection === target.replace(/^\//, '');
 
   return (
     <header>
@@ -22,10 +29,10 @@ export function Header() {
         <div className="container-page topbar-inner">
           <p className="topbar-note">
             <span className="topbar-dot" aria-hidden="true" />
-            AI e agenti, dal prototipo alla produzione
+            {t.topbarNote}
           </p>
-          <nav className="topbar-links" aria-label="Link secondari">
-            <Link href="/chi-siamo">Manifesto</Link>
+          <nav className="topbar-links" aria-label={t.secondaryLinks}>
+            <Link href={href('/chi-siamo')}>{messages.nav.manifesto}</Link>
             <a href="mailto:redazione@programmato.it">redazione@programmato.it</a>
           </nav>
         </div>
@@ -33,17 +40,17 @@ export function Header() {
 
       <div className="masthead">
         <div className="container-page masthead-inner">
-          <Link href="/" className="brand" aria-label="Programmato — home">
+          <Link href={href('/')} className="brand" aria-label={t.homeAria}>
             programmato<span className="brand-dot" aria-hidden="true">.</span>
             <span className="brand-kicker">ai &amp; agents</span>
           </Link>
 
-          <nav className="masthead-nav" aria-label="Navigazione principale">
-            {NAV_ITEMS.map((item) => (
+          <nav className="masthead-nav" aria-label={t.mainNav}>
+            {navItems.map((item) => (
               <Link
-                key={item.href}
-                href={item.href}
-                className={`nav-link${isActive(item.href) ? ' nav-link--active' : ''}`}
+                key={item.path}
+                href={href(item.path)}
+                className={`nav-link${isActive(item.path) ? ' nav-link--active' : ''}`}
               >
                 {item.label}
               </Link>
@@ -51,21 +58,23 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-1.5">
-            <Link href="/search" className="icon-btn" aria-label="Cerca nel sito">
+            <Link href={href('/search')} className="icon-btn" aria-label={t.searchAria}>
               <Search size={18} strokeWidth={1.9} aria-hidden="true" />
             </Link>
 
+            <LanguageSwitcher />
+
             <details className="mobile-menu md:hidden">
-              <summary className="icon-btn" aria-label="Apri il menu">
+              <summary className="icon-btn" aria-label={t.openMenu}>
                 <Menu size={20} strokeWidth={1.9} aria-hidden="true" />
               </summary>
               <div className="mobile-menu-panel">
-                {NAV_ITEMS.map((item) => (
-                  <Link key={item.href} href={item.href}>
+                {navItems.map((item) => (
+                  <Link key={item.path} href={href(item.path)}>
                     {item.label}
                   </Link>
                 ))}
-                <Link href="/search">Ricerca</Link>
+                <Link href={href('/search')}>{t.search}</Link>
               </div>
             </details>
           </div>

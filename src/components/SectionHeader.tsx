@@ -5,17 +5,12 @@ interface SectionHeaderProps {
   eyebrow: string;
   title: string;
   description?: string;
+  /** URL già localizzato. */
   href?: string;
   linkLabel?: string;
 }
 
-export function SectionHeader({
-  eyebrow,
-  title,
-  description,
-  href,
-  linkLabel = 'Vedi tutto',
-}: SectionHeaderProps) {
+export function SectionHeader({ eyebrow, title, description, href, linkLabel }: SectionHeaderProps) {
   return (
     <div className="section-head">
       <div>
@@ -23,7 +18,7 @@ export function SectionHeader({
         <h2 className="section-title">{title}</h2>
         {description && <p className="section-lede">{description}</p>}
       </div>
-      {href && (
+      {href && linkLabel && (
         <Link href={href} className="link-more">
           {linkLabel}
           <ArrowRight size={14} aria-hidden="true" />

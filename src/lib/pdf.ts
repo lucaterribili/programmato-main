@@ -7,12 +7,17 @@
  * jsPDF viene caricato on demand per non appesantire il bundle iniziale.
  */
 
+import {INTL_LOCALE, type Locale} from '@/lib/i18n/config';
+import {format, getMessages} from '@/lib/i18n/messages';
+
 export interface ExportPdfOptions {
     title: string;
     url: string;
     contentId: string;
 
     publishedAt?: string | null;
+    /** Lingua della pagina: testi del PDF, formato della data e (per il russo) il font con il cirillico. */
+    locale?: Locale;
 }
 
 const PAGE = {width: 210, height: 297};
@@ -29,20 +34,20 @@ const COLORS = {
     brand: [196, 118, 10] as Rgb,
 };
 
-function slugify(value: string): string {
+function slugify(value: string, fallback: string): string {
     return value
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '')
-        .slice(0, 70) || 'contenuto';
+        .slice(0, 70) || fallback;
 }
 
-function formatDate(value?: string | null): string | null {
+function formatDate(value: string | null | undefined, locale: Locale): string | null {
     if (!value) return null;
     try {
-        return new Intl.DateTimeFormat('it-IT', {day: '2-digit', month: 'long', year: 'numeric'}).format(new Date(value));
+        return new Intl.DateTimeFormat(INTL_LOCALE[locale], {day: '2-digit', month: 'long', year: 'numeric'}).format(new Date(value));
     } catch {
         return value;
     }
@@ -106,12 +111,52 @@ async function imageToJpeg(src: string, maxWidth = 1200): Promise<{ dataUrl: str
     }
 }
 
-export async function exportContentToPdf({title, url, contentId, publishedAt}: ExportPdfOptions): Promise<void> {
+/**
+ * I font base di jsPDF (Helvetica, Courier) non hanno il cirillico: per il russo si incorporano Liberation Sans/Mono
+ * (metriche di Arial/Courier New, licenza SIL OFL), già ridotti a latino + cirillico e serviti da /fonts. Si scaricano
+ * solo quando serve.
+ */
+const CYRILLIC_FONTS: Array<[file: string, family: string, style: 'normal' | 'bold' | 'italic']> = [
+    ['LiberationSans-Regular.ttf', 'LiberationSans', 'normal'],
+    ['LiberationSans-Bold.ttf', 'LiberationSans', 'bold'],
+    ['LiberationSans-Italic.ttf', 'LiberationSans', 'italic'],
+    ['LiberationMono-Regular.ttf', 'LiberationMono', 'normal'],
+];
+
+function toBase64(buffer: ArrayBuffer): string {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+        binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(binary);
+}
+
+type PdfDoc = InstanceType<(typeof import('jspdf'))['jsPDF']>;
+
+async function registerCyrillicFonts(doc: PdfDoc): Promise<void> {
+    await Promise.all(
+        CYRILLIC_FONTS.map(async ([file, family, style]) => {
+            const response = await fetch(`/fonts/${file}`);
+            if (!response.ok) throw new Error(`Font non disponibile: ${file}`);
+            doc.addFileToVFS(file, toBase64(await response.arrayBuffer()));
+            doc.addFont(file, family, style);
+        }),
+    );
+}
+
+export async function exportContentToPdf({title, url, contentId, publishedAt, locale = 'it'}: ExportPdfOptions): Promise<void> {
     const container = document.getElementById(contentId);
     if (!container) throw new Error('Contenuto non trovato');
 
+    const text = getMessages(locale).common;
     const {jsPDF} = await import('jspdf');
     const doc = new jsPDF({unit: 'mm', format: 'a4', compress: true});
+
+    const cyrillic = locale === 'ru';
+    if (cyrillic) await registerCyrillicFonts(doc);
+    const SANS = cyrillic ? 'LiberationSans' : 'helvetica';
+    const MONO = cyrillic ? 'LiberationMono' : 'courier';
 
     let y = MARGIN;
 
@@ -129,7 +174,7 @@ export async function exportContentToPdf({title, url, contentId, publishedAt}: E
         indent?: number;
         before?: number;
         after?: number;
-        font?: 'helvetica' | 'courier';
+        font?: 'sans' | 'mono';
     }
 
     const addText = (raw: string, options: TextOptions = {}) => {
@@ -140,7 +185,7 @@ export async function exportContentToPdf({title, url, contentId, publishedAt}: E
         const indent = options.indent ?? 0;
         const lineHeight = size * 0.3528 * 1.4;
 
-        doc.setFont(options.font ?? 'helvetica', options.style ?? 'normal');
+        doc.setFont(options.font === 'mono' ? MONO : SANS, options.style ?? 'normal');
         doc.setFontSize(size);
         doc.setTextColor(...(options.color ?? COLORS.text));
 
@@ -162,7 +207,7 @@ export async function exportContentToPdf({title, url, contentId, publishedAt}: E
 
         const size = 8;
         const lineHeight = size * 0.3528 * 1.35;
-        doc.setFont('courier', 'normal');
+        doc.setFont(MONO, 'normal');
         doc.setFontSize(size);
         doc.setTextColor(...COLORS.text);
 
@@ -203,15 +248,15 @@ export async function exportContentToPdf({title, url, contentId, publishedAt}: E
     };
 
     // Intestazione
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(SANS, 'bold');
     doc.setFontSize(9);
     doc.setTextColor(...COLORS.brand);
-    doc.text('Programmato — Il portale per chi sviluppa', MARGIN, y);
+    doc.text(`Programmato — ${text.header.topbarNote}`, MARGIN, y);
     y += 7;
 
     addText(title, {size: 20, style: 'bold', after: 2});
 
-    const meta = [formatDate(publishedAt), url].filter(Boolean).join('  ·  ');
+    const meta = [formatDate(publishedAt, locale), url].filter(Boolean).join('  ·  ');
     if (meta) addText(meta, {size: 8.5, color: COLORS.muted, after: 4});
 
     doc.setDrawColor(...COLORS.border);
@@ -363,12 +408,12 @@ export async function exportContentToPdf({title, url, contentId, publishedAt}: E
     const totalPages = doc.getNumberOfPages();
     for (let page = 1; page <= totalPages; page++) {
         doc.setPage(page);
-        doc.setFont('helvetica', 'normal');
+        doc.setFont(SANS, 'normal');
         doc.setFontSize(8);
         doc.setTextColor(...COLORS.muted);
         doc.text('programmato.it', MARGIN, PAGE.height - 8);
-        doc.text(`Pagina ${page} / ${totalPages}`, PAGE.width - MARGIN, PAGE.height - 8, {align: 'right'});
+        doc.text(format(text.actions.pdfPage, {p: page, n: totalPages}), PAGE.width - MARGIN, PAGE.height - 8, {align: 'right'});
     }
 
-    doc.save(`${slugify(title)}.pdf`);
+    doc.save(`${slugify(title, text.actions.pdfFile)}.pdf`);
 }

@@ -4,9 +4,13 @@ import { FileCode2 } from 'lucide-react';
 import type { ArticlePreview } from '@/lib/types';
 import { formatDate } from '@/lib/services/content';
 import imageService from '@/lib/services/image';
+import { INTL_LOCALE, type Locale } from '@/lib/i18n/config';
+import { format, getMessages } from '@/lib/i18n/messages';
+import { localizedPath } from '@/lib/i18n/paths';
 
 interface ArticleCardProps {
   post: ArticlePreview;
+  locale: Locale;
   variant?: 'default' | 'featured' | 'compact';
   className?: string;
 }
@@ -22,13 +26,14 @@ function initials(name?: string | null): string {
     .toUpperCase();
 }
 
-export function ArticleCard({ post, variant = 'default', className = '' }: ArticleCardProps) {
-  const href = `/blog/${post.slug}`;
+export function ArticleCard({ post, locale, variant = 'default', className = '' }: ArticleCardProps) {
+  const t = getMessages(locale).common.cards;
+  const href = localizedPath(locale, `/blog/${post.slug}`);
   const cover = imageService.getCoverImagePath(
     post.image ?? null,
     post.mainCategory?.image ?? null
   );
-  const date = post.publishedAt ? formatDate(post.publishedAt) : null;
+  const date = post.publishedAt ? formatDate(post.publishedAt, INTL_LOCALE[locale]) : null;
   const avatar = post.author?.avatar ? imageService.getImageUrl(post.author.avatar) : null;
   const category = post.mainCategory?.title;
 
@@ -62,7 +67,7 @@ export function ArticleCard({ post, variant = 'default', className = '' }: Artic
                 {date && post.readingTime && (
                   <span className="article-meta-dot" aria-hidden="true">•</span>
                 )}
-                {post.readingTime && <span>{post.readingTime} min di lettura</span>}
+                {post.readingTime && <span>{format(t.readingTime, { n: post.readingTime })}</span>}
                 {!date && !post.readingTime && post.sourceDomain && <span>{post.sourceDomain}</span>}
               </>
             )}

@@ -3,8 +3,12 @@ import { ArrowRight, ArrowUpRight, FileCode2 } from 'lucide-react';
 import type { ArticlePreview } from '@/lib/types';
 import { formatDate } from '@/lib/services/content';
 import imageService from '@/lib/services/image';
+import { INTL_LOCALE, type Locale } from '@/lib/i18n/config';
+import { format, getMessages } from '@/lib/i18n/messages';
+import { localizedPath } from '@/lib/i18n/paths';
 
-function AgentTrace() {
+function AgentTrace({ locale }: { locale: Locale }) {
+  const t = getMessages(locale).home.hero;
   return (
     <div className="hero-code" aria-hidden="true">
       <div className="hero-code-bar">
@@ -18,7 +22,7 @@ function AgentTrace() {
         <p className="trace-line">
           <span className="trace-time">14:02:11</span>
           <span className="trace-op">plan</span>
-          <span className="trace-text">3 passi · obiettivo: analizza i log di produzione</span>
+          <span className="trace-text">{t.traceGoal}</span>
         </p>
         <p className="trace-line">
           <span className="trace-time">14:02:12</span>
@@ -28,7 +32,7 @@ function AgentTrace() {
         <p className="trace-line">
           <span className="trace-time">14:02:19</span>
           <span className="trace-op">observe</span>
-          <span className="trace-text">12 anomalie · 3 correlate a un deploy</span>
+          <span className="trace-text">{t.traceObserve}</span>
         </p>
         <p className="trace-line">
           <span className="trace-time">14:02:20</span>
@@ -38,28 +42,30 @@ function AgentTrace() {
         <p className="trace-line">
           <span className="trace-time">14:02:21</span>
           <span className="trace-op trace-op--guard">guard</span>
-          <span className="trace-text">rollback richiede approvazione umana</span>
+          <span className="trace-text">{t.traceGuard}</span>
         </p>
         <p className="trace-line">
           <span className="trace-time">14:02:23</span>
           <span className="trace-op trace-op--eval">eval</span>
           <span className="trace-text">
-            24/25 task superati · <span className="trace-ok">score 0.96</span>
+            {t.traceEval}<span className="trace-ok">score 0.96</span>
           </span>
         </p>
       </div>
       <p className="hero-code-caption">
-        {'// ogni passo è un evento: osservabile, misurato, riproducibile'}
+        {t.traceCaption}
       </p>
     </div>
   );
 }
 
-export function Hero({ featured }: { featured?: ArticlePreview | null }) {
+export function Hero({ featured, locale }: { featured?: ArticlePreview | null; locale: Locale }) {
+  const { home, common } = getMessages(locale);
+  const t = home.hero;
   const cover = featured
     ? imageService.getCoverImagePath(featured.image ?? null, featured.mainCategory?.image ?? null)
     : null;
-  const date = featured?.publishedAt ? formatDate(featured.publishedAt) : null;
+  const date = featured?.publishedAt ? formatDate(featured.publishedAt, INTL_LOCALE[locale]) : null;
 
   return (
     <section className="hero">
@@ -67,28 +73,26 @@ export function Hero({ featured }: { featured?: ArticlePreview | null }) {
         <div>
           <span className="pill pill-accent">
             <span className="topbar-dot" aria-hidden="true" />
-            Reference italiana su AI e agenti
+            {t.pill}
           </span>
 
           <h1 className="hero-title">
-            AI e agenti.
+            {t.titleLine1}
             <br />
-            Dal prototipo alla <em>produzione</em>.
+            {t.titleBefore}<em>{t.titleEmphasis}</em>{t.titleAfter}
           </h1>
 
           <p className="hero-lede">
-            Architetture, tool use, evals e sicurezza per sistemi autonomi. Programmato
-            documenta ciò che regge davvero: trace, costi, failure mode e decisioni
-            che puoi difendere davanti a un team.
+            {t.lede}
           </p>
 
           <div className="hero-actions">
-            <Link href="/blog" className="btn btn-primary btn-lg">
-              Leggi le field notes
+            <Link href={localizedPath(locale, '/blog')} className="btn btn-primary btn-lg">
+              {t.readFieldNotes}
               <ArrowRight size={17} aria-hidden="true" />
             </Link>
-            <Link href="/tutorial" className="btn btn-outline btn-lg">
-              Apri i playbook
+            <Link href={localizedPath(locale, '/tutorial')} className="btn btn-outline btn-lg">
+              {t.openPlaybooks}
             </Link>
           </div>
 
@@ -98,13 +102,13 @@ export function Hero({ featured }: { featured?: ArticlePreview | null }) {
               <span className="hero-avatar">MR</span>
               <span className="hero-avatar">GB</span>
             </div>
-            <p>Scritto da chi costruisce agenti, non da chi li commenta.</p>
+            <p>{t.proof}</p>
           </div>
         </div>
 
         <div>
           {featured ? (
-            <Link href={`/blog/${featured.slug}`} className="hero-featured">
+            <Link href={localizedPath(locale, `/blog/${featured.slug}`)} className="hero-featured">
               <div className="hero-featured-media">
                 {cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -123,7 +127,7 @@ export function Hero({ featured }: { featured?: ArticlePreview | null }) {
                 )}
               </div>
               <div className="hero-featured-body">
-                <span className="eyebrow">In evidenza</span>
+                <span className="eyebrow">{common.cards.featured}</span>
                 <h2 className="hero-featured-title">{featured.title}</h2>
                 {featured.summary && (
                   <p className="hero-featured-excerpt">{featured.summary}</p>
@@ -134,17 +138,17 @@ export function Hero({ featured }: { featured?: ArticlePreview | null }) {
                     {date && featured.readingTime && (
                       <span className="article-meta-dot" aria-hidden="true">•</span>
                     )}
-                    {featured.readingTime && <span>{featured.readingTime} min</span>}
+                    {featured.readingTime && <span>{format(common.cards.minutes, { n: featured.readingTime })}</span>}
                   </div>
                   <span className="hero-featured-cta">
-                    Leggi
+                    {common.cards.read}
                     <ArrowUpRight size={14} aria-hidden="true" />
                   </span>
                 </div>
               </div>
             </Link>
           ) : (
-            <AgentTrace />
+            <AgentTrace locale={locale} />
           )}
         </div>
       </div>

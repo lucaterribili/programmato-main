@@ -4,19 +4,11 @@ import { FormEvent, useState } from 'react';
 import { ArrowRight, Mail, Sparkles } from 'lucide-react';
 import newsletterService from '@/lib/services/newsletter';
 import type { NewsletterPrompt } from '@/lib/types';
+import { useHref, useI18n } from '@/lib/i18n/client';
 
 interface NewsletterCTAProps {
-  prompt?: NewsletterPrompt;
+  prompt?: Partial<NewsletterPrompt>;
 }
-
-const DEFAULT_PROMPT: NewsletterPrompt = {
-  title: 'Una mail, una volta a settimana. Solo roba buona.',
-  description:
-    'I migliori articoli e tutorial del portale, più una nota di contesto su cosa sta succedendo nel mondo dello sviluppo. Zero rumore, zero spam.',
-  placeholder: 'La tua email',
-  buttonText: 'Iscriviti',
-  incentive: 'Accesso gratuito alle guide pratiche della redazione',
-};
 
 type Status =
   | { kind: 'idle' }
@@ -25,7 +17,17 @@ type Status =
   | { kind: 'error'; message: string };
 
 export function NewsletterCTA({ prompt }: NewsletterCTAProps) {
-  const copy = { ...DEFAULT_PROMPT, ...(prompt ?? {}) };
+  const { locale, messages } = useI18n();
+  const t = messages.newsletter;
+  const href = useHref();
+  const defaults: NewsletterPrompt = {
+    title: t.defaultTitle,
+    description: t.defaultDescription,
+    placeholder: t.placeholder,
+    buttonText: t.button,
+    incentive: t.incentive,
+  };
+  const copy = { ...defaults, ...(prompt ?? {}) };
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
@@ -34,14 +36,14 @@ export function NewsletterCTA({ prompt }: NewsletterCTAProps) {
     event.preventDefault();
 
     if (!email.trim() || !email.includes('@')) {
-      setStatus({ kind: 'error', message: 'Inserisci un indirizzo email valido.' });
+      setStatus({ kind: 'error', message: t.invalidEmail });
       return;
     }
 
     if (!consent) {
       setStatus({
         kind: 'error',
-        message: 'Serve il consenso al trattamento dei dati per iscriverti.',
+        message: t.needConsent,
       });
       return;
     }
@@ -53,7 +55,7 @@ export function NewsletterCTA({ prompt }: NewsletterCTAProps) {
         email: email.trim(),
         consent: true,
         source: 'homepage',
-        tags: ['programmato'],
+        tags: ['programmato', `lang-${locale}`],
       });
 
       if (response.success) {
@@ -61,21 +63,21 @@ export function NewsletterCTA({ prompt }: NewsletterCTAProps) {
           kind: 'success',
           message:
             response.data?.requiresConfirmation
-              ? 'Quasi fatto: controlla la tua inbox per confermare l’iscrizione.'
-              : response.message || 'Iscrizione completata. A presto!',
+              ? t.confirmCta
+              : (locale === 'it' && response.message) || t.done,
         });
         setEmail('');
         setConsent(false);
       } else {
         setStatus({
           kind: 'error',
-          message: response.message || 'Iscrizione non disponibile, riprova più tardi.',
+          message: (locale === 'it' && response.message) || t.unavailable,
         });
       }
     } catch {
       setStatus({
         kind: 'error',
-        message: 'Servizio momentaneamente non disponibile. Riprova più tardi.',
+        message: t.serviceDown,
       });
     }
   }
@@ -87,7 +89,7 @@ export function NewsletterCTA({ prompt }: NewsletterCTAProps) {
           <div>
             <span className="pill pill-dark">
               <Sparkles size={12} aria-hidden="true" />
-              Newsletter
+              {t.badge}
             </span>
             <h2 id="newsletter-title" className="newsletter-title mt-4">
               {copy.title}
@@ -104,7 +106,7 @@ export function NewsletterCTA({ prompt }: NewsletterCTAProps) {
           <form className="newsletter-form" onSubmit={handleSubmit} noValidate>
             <div className="newsletter-input-row">
               <label htmlFor="newsletter-email" className="sr-only">
-                Indirizzo email
+                {t.emailLabel}
               </label>
               <input
                 id="newsletter-email"
@@ -123,7 +125,7 @@ export function NewsletterCTA({ prompt }: NewsletterCTAProps) {
                 className="btn btn-accent"
                 disabled={status.kind === 'loading'}
               >
-                {status.kind === 'loading' ? 'Invio…' : copy.buttonText}
+                {status.kind === 'loading' ? t.sending : copy.buttonText}
                 <ArrowRight size={16} aria-hidden="true" />
               </button>
             </div>
@@ -135,11 +137,11 @@ export function NewsletterCTA({ prompt }: NewsletterCTAProps) {
                 onChange={(event) => setConsent(event.target.checked)}
               />
               <span>
-                Acconsento al trattamento dei dati secondo la{' '}
-                <a href="/privacy" className="underline underline-offset-2 hover:text-white">
-                  privacy policy
+                {t.consentPrefix}{' '}
+                <a href={href('/privacy')} className="underline underline-offset-2 hover:text-white">
+                  {t.privacyPolicy}
                 </a>
-                . Puoi disiscriverti quando vuoi.
+                {t.consentSuffixCta}
               </span>
             </label>
 

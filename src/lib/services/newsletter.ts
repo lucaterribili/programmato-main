@@ -169,15 +169,16 @@ class NewsletterService {
       if (isNotFoundError(error)) {
         return {
           success: false,
-          message: 'Servizio newsletter non disponibile',
-          error: { code: 'SERVICE_UNAVAILABLE', message: 'Servizio newsletter non disponibile' },
+          // il testo lo sceglie l'interfaccia, nella lingua della pagina
+          message: '',
+          error: { code: 'SERVICE_UNAVAILABLE', message: 'Newsletter service unavailable' },
         };
       }
       console.error('Newsletter subscription error:', error);
       return {
         success: false,
-        message: 'Errore durante l\'iscrizione. Riprova più tardi.',
-        error: { code: 'INTERNAL_ERROR', message: 'Errore interno del server' },
+        message: '',
+        error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
       };
     }
   }

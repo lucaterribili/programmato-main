@@ -1,18 +1,25 @@
 import Link from 'next/link';
 import { Github, Linkedin, Mail, MapPin, Twitter } from 'lucide-react';
+import type { Locale } from '@/lib/i18n/config';
+import { getMessages } from '@/lib/i18n/messages';
+import { localizedPath } from '@/lib/i18n/paths';
 
 interface FooterProps {
+  locale: Locale;
   variant?: 'default' | 'minimal';
 }
 
-const EXPLORE_LINKS = [
-  { href: '/blog', label: 'Field notes' },
-  { href: '/tutorial', label: 'Playbook' },
-  { href: '/author', label: 'Autori' },
-  { href: '/search', label: 'Cerca nel sito' },
-];
+export function Footer({ locale, variant = 'default' }: FooterProps) {
+  const { common } = getMessages(locale);
+  const t = common.footer;
+  const href = (path: string) => localizedPath(locale, path);
 
-export function Footer({ variant = 'default' }: FooterProps) {
+  const exploreLinks = [
+    { href: href('/blog'), label: common.nav.fieldNotes },
+    { href: href('/tutorial'), label: common.nav.playbook },
+    { href: href('/search'), label: t.searchSite },
+  ];
+
   const socialLinks = [
     { href: 'https://github.com/programmato', label: 'GitHub', Icon: Github },
     { href: 'https://twitter.com/programmato', label: 'Twitter', Icon: Twitter },
@@ -25,19 +32,16 @@ export function Footer({ variant = 'default' }: FooterProps) {
         {variant === 'default' && (
           <div className="footer-grid">
             <div className="footer-brand">
-              <Link href="/" className="footer-logo" aria-label="Programmato — home">
+              <Link href={href('/')} className="footer-logo" aria-label={common.header.homeAria}>
                 programmato<span className="brand-dot" aria-hidden="true">.</span>
               </Link>
-              <p className="footer-tagline">
-                Reference italiana su AI e agenti. Architetture, tool use, evals e casi
-                reali per chi costruisce sistemi autonomi — non per chi li commenta.
-              </p>
+              <p className="footer-tagline">{t.tagline}</p>
 
               <div className="footer-social">
-                {socialLinks.map(({ href, label, Icon }) => (
+                {socialLinks.map(({ href: url, label, Icon }) => (
                   <a
                     key={label}
-                    href={href}
+                    href={url}
                     className="social-circle"
                     aria-label={label}
                     target="_blank"
@@ -50,9 +54,9 @@ export function Footer({ variant = 'default' }: FooterProps) {
             </div>
 
             <div>
-              <h4 className="footer-heading">Esplora</h4>
+              <h4 className="footer-heading">{t.explore}</h4>
               <ul className="footer-links">
-                {EXPLORE_LINKS.map((link) => (
+                {exploreLinks.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="footer-link">
                       {link.label}
@@ -63,27 +67,27 @@ export function Footer({ variant = 'default' }: FooterProps) {
             </div>
 
             <div>
-              <h4 className="footer-heading">Programmato</h4>
+              <h4 className="footer-heading">{t.aboutHeading}</h4>
               <ul className="footer-links">
                 <li>
-                  <Link href="/chi-siamo" className="footer-link">Manifesto</Link>
+                  <Link href={href('/chi-siamo')} className="footer-link">{common.nav.manifesto}</Link>
                 </li>
                 <li>
-                  <Link href="/contatti" className="footer-link">Contatti</Link>
+                  <Link href={href('/contatti')} className="footer-link">{t.contacts}</Link>
                 </li>
                 <li>
-                  <Link href="/newsletter" className="footer-link">Newsletter</Link>
+                  <Link href={`${href('/')}#newsletter`} className="footer-link">{t.newsletter}</Link>
                 </li>
                 <li>
                   <a href="mailto:collabora@programmato.it" className="footer-link">
-                    Collabora con noi
+                    {t.collaborate}
                   </a>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h4 className="footer-heading">Contatti</h4>
+              <h4 className="footer-heading">{t.contactsHeading}</h4>
               <ul className="footer-contact">
                 <li>
                   <Mail size={15} aria-hidden="true" />
@@ -91,7 +95,7 @@ export function Footer({ variant = 'default' }: FooterProps) {
                 </li>
                 <li>
                   <MapPin size={15} aria-hidden="true" />
-                  <span>Roma, Italia</span>
+                  <span>{t.location}</span>
                 </li>
               </ul>
             </div>
@@ -102,9 +106,9 @@ export function Footer({ variant = 'default' }: FooterProps) {
       <div className="footer-small">
         <div className="container-page footer-small-inner">
           <div className="footer-small-links">
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/cookie">Cookie</Link>
-            <a href="mailto:redazione@programmato.it">Contatti</a>
+            <Link href={href('/privacy')}>{t.privacy}</Link>
+            <Link href={href('/cookie')}>{t.cookie}</Link>
+            <a href="mailto:redazione@programmato.it">{t.contacts}</a>
           </div>
         </div>
       </div>

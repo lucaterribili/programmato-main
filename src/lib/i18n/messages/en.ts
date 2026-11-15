@@ -1,0 +1,476 @@
+import { plural, type Widen } from './types';
+import type { it } from './it';
+
+export type Messages = Widen<typeof it>;
+
+export const en: Messages = {
+  meta: {
+    siteTitle: 'Programmato — AI, agents and autonomous systems',
+    siteDescription:
+      'Architectures, tool use, evals and real-world cases on AI and agents. The reference for people building autonomous systems in production.',
+    ogDescription: 'From prototype to production: traces, evals, costs and failure modes of autonomous systems.',
+  },
+
+  common: {
+    skipToContent: 'Skip to content',
+    nav: { fieldNotes: 'Field notes', playbook: 'Playbook', manifesto: 'Manifesto' },
+    header: {
+      topbarNote: 'AI and agents, from prototype to production',
+      secondaryLinks: 'Secondary links',
+      homeAria: 'Programmato — home',
+      mainNav: 'Main navigation',
+      searchAria: 'Search the site',
+      openMenu: 'Open the menu',
+      search: 'Search',
+    },
+    language: {
+      label: 'Language',
+      switchTo: 'Switch to',
+      menuAria: 'Change language',
+    },
+    footer: {
+      tagline:
+        'A reference on AI and agents. Architectures, tool use, evals and real-world cases for people who build autonomous systems — not for people who just comment on them.',
+      explore: 'Explore',
+      searchSite: 'Search the site',
+      aboutHeading: 'Programmato',
+      newsletter: 'Newsletter',
+      collaborate: 'Work with us',
+      contactsHeading: 'Contact',
+      contacts: 'Contact',
+      location: 'Rome, Italy',
+      privacy: 'Privacy',
+      cookie: 'Cookies',
+    },
+    newsletter: {
+      defaultTitle: 'One email, once a week. Only the good stuff.',
+      defaultDescription:
+        'The best articles and tutorials on the site, plus a note on what is happening in the world of software development. No noise, no spam.',
+      placeholder: 'Your email',
+      button: 'Subscribe',
+      incentive: 'Free access to the editorial team’s practical guides',
+      badge: 'Newsletter',
+      emailLabel: 'Email address',
+      sending: 'Sending…',
+      consentPrefix: 'I agree to the processing of my data in accordance with the',
+      privacyPolicy: 'privacy policy',
+      consentSuffixCta: '. You can unsubscribe at any time.',
+      consentSuffixWidget: '.',
+      invalidEmail: 'Please enter a valid email address.',
+      needConsent: 'You need to consent to the processing of your data to subscribe.',
+      needConsentShort: 'Consent to data processing is required.',
+      confirmCta: 'Almost done: check your inbox to confirm your subscription.',
+      confirmWidget: 'Almost done: check your inbox to confirm.',
+      done: 'You are subscribed. See you soon!',
+      unavailable: 'Subscription is not available right now, please try again later.',
+      serviceDown: 'The service is temporarily unavailable. Please try again later.',
+      serviceDownShort: 'Service unavailable. Please try again later.',
+      widgetCopy: 'One email a week with the best articles and tutorials. No spam.',
+    },
+    actions: {
+      readerMode: 'Reading mode',
+      exitReader: 'Exit reading mode',
+      exportPdf: 'Export PDF',
+      generating: 'Generating…',
+      exportError: 'Export failed. Please try again in a moment.',
+      pdfPage: 'Page {p} / {n}',
+      pdfFile: 'content',
+    },
+    pagination: { label: 'Pagination', previous: 'Previous page', next: 'Next page' },
+    cards: {
+      readingTime: '{n} min read',
+      minutes: '{n} min',
+      read: 'Read',
+      steps: plural({ one: '{n} step', other: '{n} steps' }),
+      stepByStep: 'Step-by-step guide',
+      difficulty: { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' },
+      featured: 'Featured',
+    },
+    stats: {
+      aria: 'The site in numbers',
+      fieldNotes: 'Field notes',
+      playbook: 'Playbooks',
+      authors: 'Authors',
+      reads: 'Reads',
+      evals: 'Evals',
+      newsletter: 'Newsletter',
+    },
+    sectionHeader: { seeAll: 'See all' },
+    notAvailable: {
+      eyebrow: 'Content not available',
+      untranslatedTitle: 'This content is not available in English yet.',
+      untranslatedCopy: 'There is no translation in this language.',
+      backToLanguage: 'Go to the version in',
+    },
+  },
+
+  notFound: {
+    eyebrow: 'Error 404',
+    title: 'Page not found',
+    copy: 'The address does not exist or the content has been moved.',
+    home: 'Back to the homepage',
+  },
+
+  home: {
+    fallbackTopics: [
+      'Autonomous agents',
+      'Tool use',
+      'RAG',
+      'Evals',
+      'Observability',
+      'Multi-agent',
+      'Security',
+      'Cost and latency',
+    ],
+    hero: {
+      pill: 'A reference on AI and agents',
+      titleLine1: 'AI and agents.',
+      titleBefore: 'From prototype to ',
+      titleEmphasis: 'production',
+      titleAfter: '.',
+      lede: 'Architectures, tool use, evals and security for autonomous systems. Programmato documents what really holds up: traces, costs, failure modes and decisions you can defend in front of a team.',
+      readFieldNotes: 'Read the field notes',
+      openPlaybooks: 'Open the playbooks',
+      proof: 'Written by people who build agents, not by people who comment on them.',
+      traceCaption: '// every step is an event: observable, measured, reproducible',
+      traceGoal: '3 steps · goal: analyse the production logs',
+      traceObserve: '12 anomalies · 3 related to a deploy',
+      traceGuard: 'rollback requires human approval',
+      traceEval: '24/25 tasks passed · ',
+    },
+    fieldNotes: {
+      eyebrow: 'Field notes',
+      title: 'AI and agents, no smoke and mirrors',
+      description:
+        'Analyses and real cases on how agents actually work: orchestration, tool use, evals, costs and failure modes. Only systems that hold up in production.',
+      link: 'All field notes',
+      emptyEyebrow: 'Coming soon',
+      emptyTitle: 'The next analysis is in the works.',
+      emptyCopy:
+        'We are checking the next cases in the field: agents, tools and evaluations. In the meantime you can browse the archive.',
+      emptyCta: 'Go to the archive',
+      popular: 'Most read',
+      defaultCategory: 'Field note',
+      principle: 'The principle',
+      quote: '“An agent without evals is a demo with more steps.”',
+      quoteBy: '— The Programmato editorial team',
+    },
+    model: {
+      eyebrow: 'The model',
+      title: 'An agent is not a prompt. It is a loop.',
+      description:
+        'Plan, act, observe, evaluate: four phases that must be designed, instrumented and measured. This is where a prototype becomes a system.',
+      link: 'Go to the playbooks',
+      phases: [
+        {
+          step: 'Plan',
+          title: 'Plan',
+          code: 'goal → steps',
+          copy: 'Break the goal down into verifiable steps, with explicit exit criteria.',
+        },
+        {
+          step: 'Act',
+          title: 'Act',
+          code: 'tool.call()',
+          copy: 'Tool use on code, browsers, APIs and databases. Minimal permissions, no magic.',
+        },
+        {
+          step: 'Observe',
+          title: 'Observe',
+          code: 'trace.emit()',
+          copy: 'Every action leaves an event: state, input, output, latency and cost.',
+        },
+        {
+          step: 'Evaluate',
+          title: 'Evaluate',
+          code: 'eval.run()',
+          copy: 'Measure before deploying: real tasks, regressions, guardrails and rollback.',
+        },
+      ],
+    },
+    playbook: {
+      eyebrow: 'Playbook',
+      title: 'Build agents, step by step',
+      description:
+        'Hands-on guides with code: from the first tool call to a system that is observable, evaluated and ready to deploy.',
+      link: 'All playbooks',
+    },
+    skills: {
+      eyebrow: 'Expertise',
+      title: 'The areas we cover',
+      lede: 'Not everything about AI. Only what it takes to put an agent into production and keep it under control.',
+      toolUseLabel: 'Tool use',
+      toolUseCopy:
+        'An agent is only as good as the tools it can use. We document real integrations: filesystem, browser, internal APIs, databases, code execution and code review.',
+      standardEyebrow: 'The standard',
+      standard: [
+        {
+          title: 'Evals before the demo',
+          copy: 'A technique makes it here only if it has been measured on real tasks, not on a lucky prompt.',
+        },
+        {
+          title: 'Traces, or it does not exist',
+          copy: 'If we cannot reconstruct every step of an agent, it is not ready for production.',
+        },
+        {
+          title: 'Production as the benchmark',
+          copy: 'Costs, latency and failure modes matter as much as the quality of the output.',
+        },
+      ],
+      about: 'Get to know the project',
+    },
+    newsletterPrompt: {
+      title: 'One email a week on the craft of agents',
+      description:
+        'Orchestration patterns, tool use, evals and real cases. What worked, what blew up and why. Zero hype, zero recycled threads.',
+      incentive: 'A weekly selection, made for people who build',
+    },
+  },
+
+  blog: {
+    metaTitle: 'Blog',
+    metaDescription:
+      'All the articles and technical guides published on Programmato: frontend, backend, architectures, tooling and career.',
+    pill: 'Archive',
+    title: 'All articles',
+    lede: 'Analyses, guides and working notes written by developers. Look for depth, not for clickbait headlines.',
+    count: plural({ one: '{n} article published', other: '{n} articles published' }),
+    emptyEyebrow: 'No results',
+    emptyTitle: 'Still quiet here.',
+    emptyCopy: 'There are no articles to show right now. Check back soon: the editorial team is at work.',
+    emptyOtherLanguage: 'There are no articles in this language yet. The available articles are in Italian.',
+    articleMetaTitle: 'Article',
+    unavailableTitle: 'This article is not here (yet).',
+    unavailableCopy:
+      'It may have been moved, or the editorial service may be temporarily unreachable.',
+    backToArchive: 'Back to the archive',
+    archive: 'Archive',
+    views: plural({ one: '{n} read', other: '{n} reads' }),
+    textSoonEyebrow: 'Text coming soon',
+    textSoonTitle: 'The content is not available yet.',
+    textSoonCopy: 'The editorial team is finishing this article. Check back shortly.',
+    faq: 'Frequently asked questions',
+    inThisArticle: 'In this article',
+    authorFallbackRole: 'Author',
+    topics: 'Topics',
+    keepReading: 'Keep reading',
+    related: 'Related articles',
+  },
+
+  tutorial: {
+    metaTitle: 'Tutorials',
+    metaDescription:
+      'Practical step-by-step guides to learn new technologies, with real code and clear goals.',
+    pill: 'Workshop',
+    title: 'Technical guides',
+    lede: 'Step-by-step tutorials, from the first command to the deploy. Real code, clear goals and no step taken for granted.',
+    count: plural({ one: '{n} guide available', other: '{n} guides available' }),
+    emptyEyebrow: 'Coming soon',
+    emptyTitle: 'The next guides are taking shape.',
+    emptyCopy: 'We are writing new tutorials. Come back soon.',
+    emptyOtherLanguage: 'There are no guides in this language yet. The available guides are in Italian.',
+    unavailableTitle: 'This guide is not here (yet).',
+    unavailableCopy:
+      'It may have been moved, or the editorial service may be temporarily unreachable.',
+    backToTutorials: 'Back to the tutorials',
+    allTutorials: 'All tutorials',
+    steps: plural({ one: '{n} step', other: '{n} steps' }),
+    objectives: 'What you will learn',
+    prerequisites: 'Prerequisites',
+    conclusion: 'Conclusion',
+    stepsIndex: 'Steps index',
+    resources: 'Resources',
+    keepLearning: 'Keep learning',
+    related: 'Related tutorials',
+    introduction: 'Introduction',
+    readChapter: 'Read the chapter',
+    backToGuide: 'Back to the guide',
+    chapters: 'Chapters',
+  },
+
+  search: {
+    metaTitle: 'Search',
+    metaDescription: 'Search articles, tutorials, authors and topics on Programmato.',
+    pill: 'Search',
+    title: 'Search the site',
+    lede: 'Articles, tutorials, authors and topics. Type what you need and press enter.',
+    placeholder: 'E.g. Next.js, authentication, databases…',
+    ariaLabel: 'Search the site',
+    button: 'Search',
+    startEyebrow: 'Where to start',
+    startTitle: 'What do you want to learn today?',
+    startCopy: 'Try a topic, a technology or the name of an author.',
+    noResultsEyebrow: 'No results',
+    noResultsTitle: 'Nothing for “{q}”.',
+    noResultsCopy: 'Try a more general word, or browse the archive.',
+    goToArchive: 'Go to the archive',
+    resultsFor: plural({ one: '{n} result for “{q}”', other: '{n} results for “{q}”' }),
+    types: { article: 'Article', tutorial: 'Tutorial', author: 'Author', category: 'Category', tag: 'Tag' },
+  },
+
+  about: {
+    metaTitle: 'Manifesto',
+    metaDescription:
+      'Programmato is a reference on AI and agents: we document autonomous systems that work in production, with evals, traces and real cases.',
+    pill: 'Manifesto',
+    title: 'A reference on AI that goes into production',
+    lede: 'Programmato was born from a concrete problem: too much AI content written to impress, too little to make an agent work. We document autonomous systems with the same rigour used to write software.',
+    whyHeading: 'Why agents',
+    why1: 'A model answers. An agent acts: it plans, calls tools, observes the result and decides the next step. That is where the real problems appear — permissions, context, cost per task, unexpected behaviour in production.',
+    why2: 'That is why we do not publish news for the sake of it. We write about orchestration, tool use, memory, RAG, evaluation and security when we can show the consequences on a real system.',
+    howHeading: 'How we work',
+    how1: 'Every playbook is run before it is published. Every claim about an agent’s performance comes with how it was measured: task, dataset, metric and conditions. If a step does not work, it does not go out.',
+    how2: 'The team is distributed and independent. We have no investors dictating the agenda and we do not accept content we would not sign.',
+    values: [
+      {
+        title: 'Evals before the demo',
+        copy: 'A technique makes it here only if it has been measured on real tasks, not on a lucky prompt.',
+      },
+      {
+        title: 'Traces, or it does not exist',
+        copy: 'Every step of an agent must be reconstructable: input, tool call, output, latency and cost.',
+      },
+      {
+        title: 'Production as the benchmark',
+        copy: 'Costs, latency and failure modes matter as much as the quality of the output. Often more.',
+      },
+      {
+        title: 'Independence',
+        copy: 'No sponsored content disguised as analysis. If we work with a brand, we say so.',
+      },
+    ],
+    writeEyebrow: 'Write with us',
+    writeTitle: 'Have you taken an agent to production?',
+    writeCopy:
+      'We are looking for people who design, evaluate and maintain autonomous systems: architects, ML engineers and developers who have seen what happens when the agent meets real users. You do not need to be famous: you need something verifiable to tell.',
+    contactUs: 'Get in touch',
+  },
+
+  contact: {
+    metaTitle: 'Contact',
+    metaDescription:
+      'Write to the Programmato editorial team: tips, article proposals, collaborations and information.',
+    pill: 'Contact',
+    title: 'Let’s talk',
+    lede: 'A correction, a proposal, a collaboration or simply a technical question: choose the right channel and we will reply as soon as we can.',
+    channels: {
+      editorial: { label: 'Editorial team', copy: 'Tips, corrections, article proposals.' },
+      collab: {
+        label: 'Collaborations',
+        copy: 'Want to write with us? Tell us what you can do and what you would like to write about.',
+      },
+      privacy: { label: 'Privacy', copy: 'Requests about your personal data and the newsletter.' },
+    },
+    whereHeading: 'Where we are',
+    whereCopy: 'The editorial team is distributed and works remotely. Our home base is Rome, Italy.',
+    socialHeading: 'On social media',
+    beforeHeading: 'Before you write',
+    before1: 'For corrections, point us to the article and the passage to check.',
+    before2: 'For proposals, send a 5-line abstract and a link to something you have already written.',
+    before3:
+      'For the newsletter, use the unsubscribe link in every email or write to privacy@programmato.it.',
+    aboutLink: 'About us',
+  },
+
+  privacy: {
+    metaTitle: 'Privacy',
+    metaDescription:
+      'Notice on the processing of the personal data of Programmato users, pursuant to Regulation (EU) 2016/679 (GDPR).',
+    pill: 'Legal',
+    title: 'Privacy notice',
+    lede: 'How we collect, use and protect the personal data of those who read Programmato and subscribe to its newsletter.',
+    updated: 'Last updated: November 2026',
+    s1Title: '1. Data controller',
+    s1Before:
+      'The data controller for personal data is the Programmato editorial team. For any request relating to privacy you can write to ',
+    s2Title: '2. What data we collect',
+    s2Intro: 'We collect only the data needed to provide the service:',
+    s2Items: [
+      {
+        label: 'Browsing data:',
+        text: ' anonymous or pseudonymised technical information needed for the site to work (IP address, browser type, pages visited).',
+      },
+      {
+        label: 'Data you provide voluntarily:',
+        text: ' your email address and, if given, your name, when you subscribe to the newsletter or send a message to the editorial team.',
+      },
+      {
+        label: 'Communication data:',
+        text: ' the content of the messages you send us and the related metadata.',
+      },
+    ],
+    s3Title: '3. Purposes and legal basis',
+    s3Intro: 'We process data for the following purposes:',
+    s3Items: [
+      {
+        label: 'Providing the site and security:',
+        text: ' legitimate interest in keeping the service running and protected.',
+      },
+      {
+        label: 'Newsletter:',
+        text: ' the data subject’s explicit consent, which can be withdrawn at any time through the unsubscribe link in every email.',
+      },
+      {
+        label: 'Replying to requests:',
+        text: ' performance of pre-contractual or contractual measures at the data subject’s request.',
+      },
+      { label: 'Legal obligations:', text: ' legal obligations we are subject to.' },
+    ],
+    s4Title: '4. Retention',
+    s4: 'Newsletter data is kept until consent is withdrawn. Browsing data is kept for the time strictly necessary for technical and security purposes. Messages sent to the editorial team are kept for as long as needed to handle the request and any subsequent dealings.',
+    s5Title: '5. Disclosure to third parties',
+    s5: 'We do not sell or transfer personal data to third parties for marketing purposes. Data may be processed by technical providers (hosting, email delivery, infrastructure) appointed as processors under Article 28 GDPR, within the limits of what is necessary to provide the service.',
+    s6Title: '6. Transfers outside the EU',
+    s6: 'Where a provider processes data outside the European Economic Area, the transfer takes place on the basis of appropriate safeguards under Articles 44 et seq. of the GDPR.',
+    s7Title: '7. Your rights',
+    s7a: 'You can exercise at any time the rights provided by Articles 15–22 of the GDPR: access, rectification, erasure, restriction, objection and portability. You can also withdraw your consent to the newsletter without affecting the lawfulness of the processing carried out before the withdrawal.',
+    s7bBefore: 'To exercise your rights write to ',
+    s7bAfter:
+      '. You also have the right to lodge a complaint with the Italian data protection authority (Garante per la protezione dei dati personali).',
+    s8Title: '8. Cookies',
+    s8Before: 'For information about the cookies used by the site see the ',
+    s8Link: 'cookie policy',
+    s9Title: '9. Changes',
+    s9: 'This notice may be updated to reflect technical or legal changes. The date of the last update is shown at the top of the page.',
+  },
+
+  cookie: {
+    metaTitle: 'Cookies',
+    metaDescription:
+      'Programmato’s cookie policy: which cookies we use, why, and how to manage your preferences.',
+    pill: 'Legal',
+    title: 'Cookie policy',
+    lede: 'What cookies are, which ones Programmato uses and how you can manage them from your browser.',
+    updated: 'Last updated: November 2026',
+    s1Title: '1. What cookies are',
+    s1: 'Cookies are small text files that a site saves in the user’s browser. They are used to make the site work, remember preferences or collect statistical information. Similar technologies (local storage, pixels) are treated in the same way in this notice.',
+    s2Title: '2. Cookies we use',
+    s2Intro:
+      'Programmato is designed to work with as few cookies as possible. The categories we use are:',
+    s2Items: [
+      {
+        label: 'Necessary technical cookies:',
+        text: ' essential for security and for the pages to work properly. They do not require consent.',
+      },
+      {
+        label: 'Preferences:',
+        text: ' they store the user’s choices, such as the site language, consent to the newsletter or display settings.',
+      },
+      {
+        label: 'Anonymous statistics:',
+        text: ' when active, they collect aggregate data on how the site is used without identifying individual users. They are enabled only with consent, where required.',
+      },
+    ],
+    s2Outro:
+      'We do not use first-party advertising profiling cookies. Any third-party embeds (for example videos or external repositories) may set their own cookies: in that case the notices of the respective providers apply.',
+    s3Title: '3. Managing your preferences',
+    s3a: 'You can manage or delete cookies from your browser settings. You can also browse in private mode or block third-party cookies. Keep in mind that blocking technical cookies may impair some features of the site.',
+    s3b: 'To withdraw consent to statistics or marketing tools, use your browser settings or the opt-out links of the individual providers.',
+    s4Title: '4. Newsletter',
+    s4: 'Subscribing to the newsletter does not depend on cookies: consent is collected explicitly in the form. You can unsubscribe through the link in every email.',
+    s5Title: '5. Contact',
+    s5Before: 'For questions about cookies write to ',
+    s5Middle: '. For the processing of personal data see the ',
+    s5Link: 'privacy policy',
+  },
+};

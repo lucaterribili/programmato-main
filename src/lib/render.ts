@@ -1,20 +1,22 @@
 import { marked } from 'marked';
 import DOMPurify from 'isomorphic-dompurify';
+import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/config';
+import { localizedPath } from '@/lib/i18n/paths';
 
 /** Link interni del backend: `entity://<tipo>/<slug>` → URL del sito. */
-function entityPath(entity: string, slug: string): string {
+function entityPath(entity: string, slug: string, locale: Locale): string {
   switch (entity) {
     case 'post':
     case 'article':
-      return `/blog/${slug}`;
+      return localizedPath(locale, `/blog/${slug}`);
     case 'tutorial':
-      return `/tutorial/${slug}`;
+      return localizedPath(locale, `/tutorial/${slug}`);
     case 'category':
-      return `/blog?category=${slug}`;
+      return localizedPath(locale, `/blog?category=${slug}`);
     case 'tag':
-      return `/blog?tag=${slug}`;
+      return localizedPath(locale, `/blog?tag=${slug}`);
     default:
-      return '/blog';
+      return localizedPath(locale, '/blog');
   }
 }
 
@@ -49,12 +51,12 @@ function wrapTables(html: string): string {
  * Render article/tutorial body content coming from the backend.
  * Il backend invia Markdown (a volte con HTML dentro); il risultato viene sanitizzato.
  */
-export async function renderContent(raw?: string | null): Promise<string> {
+export async function renderContent(raw?: string | null, locale: Locale = DEFAULT_LOCALE): Promise<string> {
   if (!raw) return '';
 
   const withLinks = raw.replace(
     /\]\(entity:\/\/([^/)\s]+)\/([^)\s]+)\)/g,
-    (_, entity: string, slug: string) => `](${entityPath(entity, decodeURIComponent(slug))})`,
+    (_, entity: string, slug: string) => `](${entityPath(entity, decodeURIComponent(slug), locale)})`,
   );
 
   const html = await marked.parse(withLinks);

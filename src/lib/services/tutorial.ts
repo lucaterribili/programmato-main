@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { isDegradableError, buildQueryString } from './http';
+import { isDegradableError, isNotFoundError, buildQueryString } from './http';
 import {
   apiGet, mapPage, mapTutorialPreview, mapImage, mapUser, mapCategory, emptyPage,
   type RawPage, type RawTutorial,
 } from './backend';
 import type { Tutorial, TutorialListResponse, TutorialPreview, TutorialStep } from '@/lib/types';
+import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/config';
+import { getMessages } from '@/lib/i18n/messages';
+import { localizedPath } from '@/lib/i18n/paths';
 
 export interface TutorialChapter {
   slug: string;
@@ -27,19 +30,20 @@ interface RawBook {
 
 class TutorialService {
   /** Un tutorial è un "libro": introduzione + capitoli (`childs`), ognuno con la sua pagina. */
-  private mapBook(raw: RawBook): Tutorial {
+  private mapBook(raw: RawBook, locale: Locale): Tutorial {
+    const text = getMessages(locale).tutorial;
     const t = raw.tutorial;
     const chapters = raw.childs ?? [];
     const steps: TutorialStep[] = [];
     if (t.body) {
-      steps.push({ id: 0, order: 0, title: 'Introduzione', content: t.body });
+      steps.push({ id: 0, order: 0, title: text.introduction, content: t.body });
     }
     chapters.forEach((c, i) => {
       steps.push({
         id: i + 1,
         order: i + 1,
         title: c.title,
-        content: `${c.description ?? ''}\n\n[Leggi il capitolo](/tutorial/${t.slug}/${c.slug})`,
+        content: `${c.description ?? ''}\n\n[${text.readChapter}](${localizedPath(locale, `/tutorial/${t.slug}/${c.slug}`)})`,
       });
     });
     const meta = t.metaData;
@@ -58,23 +62,24 @@ class TutorialService {
     };
   }
 
-  private async list(path: string, pageSize: number): Promise<TutorialListResponse> {
+  private async list(path: string, pageSize: number, locale: Locale): Promise<TutorialListResponse> {
     try {
-      return mapPage(await apiGet<RawPage<RawTutorial>>(path), mapTutorialPreview);
+      return mapPage(await apiGet<RawPage<RawTutorial>>(path, locale), mapTutorialPreview);
     } catch (error) {
       if (isDegradableError(error)) return emptyPage(pageSize);
       throw error;
     }
   }
 
-  getAllTutorials(pageNumber = 1, pageSize = 10): Promise<TutorialListResponse> {
-    return this.list(`/tutorial/list/paginated${buildQueryString({ pageNumber, pageSize })}`, pageSize);
+  getAllTutorials(pageNumber = 1, pageSize = 10, locale: Locale = DEFAULT_LOCALE): Promise<TutorialListResponse> {
+    return this.list(`/tutorial/list/paginated${buildQueryString({ pageNumber, pageSize })}`, pageSize, locale);
   }
 
-  getTutorialsByCategory(categorySlug: string, pageNumber = 1, pageSize = 10): Promise<TutorialListResponse> {
+  getTutorialsByCategory(categorySlug: string, pageNumber = 1, pageSize = 10, locale: Locale = DEFAULT_LOCALE): Promise<TutorialListResponse> {
     return this.list(
       `/tutorial/category/${encodeURIComponent(categorySlug)}${buildQueryString({ pageNumber, pageSize })}`,
       pageSize,
+      locale,
     );
   }
 
@@ -86,17 +91,17 @@ class TutorialService {
     return emptyPage(pageSize);
   }
 
-  async getTutorialBySlug(slug: string): Promise<Tutorial | null> {
+  async getTutorialBySlug(slug: string, locale: Locale = DEFAULT_LOCALE): Promise<Tutorial | null> {
     try {
-      return this.mapBook(await apiGet<RawBook>(`/tutorial/book/${encodeURIComponent(slug)}`));
+      return this.mapBook(await apiGet<RawBook>(`/tutorial/book/${encodeURIComponent(slug)}`, locale), locale);
     } catch (error) {
-      if (isDegradableError(error)) return null;
+      if (isNotFoundError(error)) return null;
       throw error;
     }
   }
 
   /** Capitolo di un tutorial: corpo + navigazione precedente/successivo. */
-  async getChapter(chapterSlug: string): Promise<TutorialChapter | null> {
+  async getChapter(chapterSlug: string, locale: Locale = DEFAULT_LOCALE): Promise<TutorialChapter | null> {
     try {
       const raw = await apiGet<{
         tutorial: RawTutorial;
@@ -104,7 +109,7 @@ class TutorialService {
         ancestor?: RawTutorial | null;
         prev?: RawTutorial | null;
         next?: RawTutorial | null;
-      }>(`/tutorial/detail/${encodeURIComponent(chapterSlug)}`);
+      }>(`/tutorial/detail/${encodeURIComponent(chapterSlug)}`, locale);
       const nav = (t?: RawTutorial | null) => (t ? { slug: t.slug, title: t.title } : null);
       const meta = raw.tutorial.metaData;
       return {
@@ -124,12 +129,12 @@ class TutorialService {
     }
   }
 
-  async getLatestTutorials(limit = 10): Promise<TutorialPreview[]> {
-    return (await this.getAllTutorials(1, limit)).content;
+  async getLatestTutorials(limit = 10, locale: Locale = DEFAULT_LOCALE): Promise<TutorialPreview[]> {
+    return (await this.getAllTutorials(1, limit, locale)).content;
   }
 
-  async getPopularTutorials(limit = 10): Promise<TutorialPreview[]> {
-    return this.getLatestTutorials(limit);
+  async getPopularTutorials(limit = 10, locale: Locale = DEFAULT_LOCALE): Promise<TutorialPreview[]> {
+    return this.getLatestTutorials(limit, locale);
   }
 }
 

@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { ArrowRight, Mail } from 'lucide-react';
 import newsletterService from '@/lib/services/newsletter';
+import { useHref, useI18n } from '@/lib/i18n/client';
 
 type Status =
   | { kind: 'idle' }
@@ -12,6 +13,9 @@ type Status =
 
 /** La newsletter in piccolo, per la barra laterale degli articoli (stesso servizio del riquadro della home). */
 export function NewsletterWidget() {
+  const { locale, messages } = useI18n();
+  const t = messages.newsletter;
+  const href = useHref();
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
@@ -19,11 +23,11 @@ export function NewsletterWidget() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!email.trim() || !email.includes('@')) {
-      setStatus({ kind: 'error', message: 'Inserisci un indirizzo email valido.' });
+      setStatus({ kind: 'error', message: t.invalidEmail });
       return;
     }
     if (!consent) {
-      setStatus({ kind: 'error', message: 'Serve il consenso al trattamento dei dati.' });
+      setStatus({ kind: 'error', message: t.needConsentShort });
       return;
     }
     setStatus({ kind: 'loading' });
@@ -32,22 +36,22 @@ export function NewsletterWidget() {
         email: email.trim(),
         consent: true,
         source: 'article-sidebar',
-        tags: ['programmato'],
+        tags: ['programmato', `lang-${locale}`],
       });
       if (response.success) {
         setStatus({
           kind: 'success',
           message: response.data?.requiresConfirmation
-            ? 'Quasi fatto: controlla la posta per confermare.'
-            : response.message || 'Iscrizione completata. A presto!',
+            ? t.confirmWidget
+            : (locale === 'it' && response.message) || t.done,
         });
         setEmail('');
         setConsent(false);
       } else {
-        setStatus({ kind: 'error', message: response.message || 'Iscrizione non disponibile, riprova più tardi.' });
+        setStatus({ kind: 'error', message: (locale === 'it' && response.message) || t.unavailable });
       }
     } catch {
-      setStatus({ kind: 'error', message: 'Servizio non disponibile. Riprova più tardi.' });
+      setStatus({ kind: 'error', message: t.serviceDownShort });
     }
   }
 
@@ -55,20 +59,20 @@ export function NewsletterWidget() {
     <div className="rounded-2xl bg-navy p-5 text-white">
       <div className="flex items-center gap-2">
         <Mail size={15} className="text-accent" aria-hidden="true" />
-        <h2 className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-white">Newsletter</h2>
+        <h2 className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-white">{t.badge}</h2>
       </div>
       <p className="mt-3 text-sm leading-relaxed text-white/80">
-        Una mail a settimana con i migliori articoli e tutorial. Niente spam.
+        {t.widgetCopy}
       </p>
       <form onSubmit={handleSubmit} noValidate className="mt-4 space-y-3">
         <label htmlFor="sidebar-newsletter-email" className="sr-only">
-          Indirizzo email
+          {t.emailLabel}
         </label>
         <input
           id="sidebar-newsletter-email"
           type="email"
           autoComplete="email"
-          placeholder="La tua email"
+          placeholder={t.placeholder}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           disabled={status.kind === 'loading'}
@@ -82,15 +86,15 @@ export function NewsletterWidget() {
             className="mt-0.5"
           />
           <span>
-            Acconsento al trattamento dei dati secondo la{' '}
-            <a href="/privacy" className="underline underline-offset-2 hover:text-white">
-              privacy policy
+            {t.consentPrefix}{' '}
+            <a href={href('/privacy')} className="underline underline-offset-2 hover:text-white">
+              {t.privacyPolicy}
             </a>
-            .
+            {t.consentSuffixWidget}
           </span>
         </label>
         <button type="submit" disabled={status.kind === 'loading'} className="btn btn-accent btn-sm w-full justify-center">
-          {status.kind === 'loading' ? 'Invio…' : 'Iscriviti'}
+          {status.kind === 'loading' ? t.sending : t.button}
           <ArrowRight size={14} aria-hidden="true" />
         </button>
         {status.kind === 'success' && (

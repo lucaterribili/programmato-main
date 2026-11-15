@@ -4,6 +4,7 @@
  * immagini con `thumbs`, autore in `user`, nessun tag/readingTime sui post.
  */
 import config from '@/lib/config';
+import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/config';
 import { backendFetch } from './http';
 import { calculateReadingTime } from './content';
 import type {
@@ -91,12 +92,17 @@ export interface RawPage<T> {
 
 /* ---------- HTTP ---------- */
 
-export async function apiGet<T>(path: string): Promise<T> {
+/**
+ * GET al backend. `locale` va nell'header `language`: il backend risponde nella lingua richiesta (e solo con i contenuti
+ * che hanno quella traduzione). La cache di Next distingue le richieste anche per header, quindi le lingue non si mescolano.
+ */
+export async function apiGet<T>(path: string, locale: Locale = DEFAULT_LOCALE): Promise<T> {
   const response = await backendFetch(`${config.apiEndpoint}${path}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${config.apiKey}`,
       domain: config.domain,
+      language: locale,
     },
     next: { revalidate: config.revalidateSeconds },
   } as RequestInit);
@@ -137,7 +143,7 @@ export function mapTag(raw: { id: number; slug: string; title: string; descripti
 
 export function mapUser(raw?: RawUser | null): User | null {
   if (!raw) return null;
-  const name = raw.fullName || [raw.firstName, raw.lastName].filter(Boolean).join(' ') || 'Redazione';
+  const name = raw.fullName || [raw.firstName, raw.lastName].filter(Boolean).join(' ') || 'Programmato';
   return { id: raw.id ?? 0, name, slug: '', avatar: raw.avatar ?? null };
 }
 

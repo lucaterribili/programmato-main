@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { BookOpen, FileDown, Loader2, X } from 'lucide-react';
+import { useI18n } from '@/lib/i18n/client';
 
 interface ArticleActionsProps {
   title: string;
@@ -18,6 +19,8 @@ interface ArticleActionsProps {
  * dal testo che si sta leggendo (jsPDF si scarica solo al clic).
  */
 export function ArticleActions({ title, url, contentId, publishedAt }: ArticleActionsProps) {
+  const { locale, messages } = useI18n();
+  const t = messages.actions;
   const [readerMode, setReaderMode] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
@@ -33,10 +36,10 @@ export function ArticleActions({ title, url, contentId, publishedAt }: ArticleAc
     setExportError(null);
     try {
       const { exportContentToPdf } = await import('@/lib/pdf');
-      await exportContentToPdf({ title, url, contentId, publishedAt });
+      await exportContentToPdf({ title, url, contentId, publishedAt, locale });
     } catch (error) {
       console.error("Errore durante l'esportazione PDF:", error);
-      setExportError('Esportazione non riuscita. Riprova tra poco.');
+      setExportError(t.exportError);
     } finally {
       setExporting(false);
     }
@@ -47,7 +50,7 @@ export function ArticleActions({ title, url, contentId, publishedAt }: ArticleAc
       {readerMode && (
         <button type="button" onClick={() => setReaderMode(false)} className="reader-exit">
           <X size={16} aria-hidden="true" />
-          Esci dalla lettura
+          {t.exitReader}
         </button>
       )}
 
@@ -59,7 +62,7 @@ export function ArticleActions({ title, url, contentId, publishedAt }: ArticleAc
           className="article-action"
         >
           <BookOpen size={16} aria-hidden="true" />
-          Modalità lettura
+          {t.readerMode}
         </button>
 
         <button type="button" onClick={exportPdf} disabled={exporting} className="article-action">
@@ -68,7 +71,7 @@ export function ArticleActions({ title, url, contentId, publishedAt }: ArticleAc
           ) : (
             <FileDown size={16} aria-hidden="true" />
           )}
-          {exporting ? 'Generazione…' : 'Esporta PDF'}
+          {exporting ? t.generating : t.exportPdf}
         </button>
 
         {exportError && (
