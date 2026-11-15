@@ -134,7 +134,7 @@ export default async function TutorialPage({ params }: PageProps) {
       </header>
 
       <section className="section">
-        <div className="container-page grid gap-12 lg:grid-cols-[minmax(0,1fr)_17rem]">
+        <div className="container-page grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[minmax(0,1fr)_17rem]">
           <div className="max-w-3xl">
             {(tutorial.objectives?.length || tutorial.prerequisites?.length) && (
               <div className="mb-10 grid gap-4 sm:grid-cols-2">

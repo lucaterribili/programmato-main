@@ -176,7 +176,7 @@ export default async function ArticlePage({ params }: PageProps) {
             </div>
           )}
 
-          <div className="article-layout mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem]">
+          <div className="article-layout mt-12 grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[minmax(0,1fr)_16rem]">
             <article>
               {html ? (
                 <>

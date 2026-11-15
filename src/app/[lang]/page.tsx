@@ -67,7 +67,7 @@ export default async function Home({ params }: PageProps) {
             linkLabel={t.fieldNotes.link}
           />
 
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_19rem]">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_19rem]">
             <div>
               {latest.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2">
