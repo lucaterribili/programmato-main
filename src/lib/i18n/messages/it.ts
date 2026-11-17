@@ -10,7 +10,7 @@ export const it = {
 
   common: {
     skipToContent: 'Salta al contenuto',
-    nav: { fieldNotes: 'Field notes', playbook: 'Playbook', manifesto: 'Manifesto' },
+    nav: { fieldNotes: 'Field notes', playbook: 'Playbook', video: 'Video', manifesto: 'Manifesto' },
     header: {
       topbarNote: 'AI e agenti, dal prototipo alla produzione',
       secondaryLinks: 'Link secondari',
@@ -252,6 +252,32 @@ export const it = {
     topics: 'Argomenti',
     keepReading: 'Continua a leggere',
     related: 'Articoli correlati',
+  },
+
+  video: {
+    metaTitle: 'Video',
+    metaDescription: 'Video e playlist di Programmato: dimostrazioni, walkthrough e approfondimenti su AI e agenti.',
+    pill: 'Video',
+    title: 'Video e playlist',
+    lede: 'Dimostrazioni e walkthrough raccolti in playlist: guarda come si costruisce, non solo come si racconta.',
+    count: plural({ one: '{n} playlist', other: '{n} playlist' }),
+    videos: plural({ one: '{n} video', other: '{n} video' }),
+    emptyEyebrow: 'In preparazione',
+    emptyTitle: 'I primi video stanno arrivando.',
+    emptyCopy: 'Stiamo preparando le prime playlist. Torna a trovarci presto.',
+    emptyOtherLanguage: 'Non ci sono ancora video in questa lingua. I video disponibili sono in italiano.',
+    emptyPlaylist: 'Questa playlist non ha ancora video.',
+    unavailableTitle: 'Questo video non c’è (ancora).',
+    unavailableCopy: 'Potrebbe essere stato spostato o il servizio editoriale potrebbe essere momentaneamente irraggiungibile.',
+    backToVideos: 'Tutti i video',
+    backToPlaylist: 'Torna alla playlist',
+    duration: 'Durata',
+    published: 'Pubblicato',
+    speed: 'Velocità',
+    playerError: 'Il video non si riesce a caricare.',
+    openInNewTab: 'Aprilo in una nuova scheda',
+    noVideoSupport: 'Il tuo browser non supporta la riproduzione video.',
+    inThisPlaylist: 'In questa playlist',
   },
 
   tutorial: {

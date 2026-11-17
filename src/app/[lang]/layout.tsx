@@ -6,6 +6,7 @@ import { I18nProvider, type ClientMessages } from '@/lib/i18n/client';
 import { LOCALES, isLocale, type Locale } from '@/lib/i18n/config';
 import { getMessages } from '@/lib/i18n/messages';
 import { openGraphBase } from '@/lib/i18n/seo';
+import { videoService } from '@/lib/services';
 import '../globals.css';
 
 // Solo le lingue del sito: qualunque altro prefisso è un 404.
@@ -45,6 +46,8 @@ export default async function RootLayout({ children, params }: Readonly<LayoutPr
   const locale: Locale = lang;
   const messages = getMessages(locale);
   const { newsletter, actions, language, header, nav } = messages.common;
+  // la voce di menu Video c'è solo se ci sono playlist (la chiamata è in cache come le altre)
+  const showVideo = (await videoService.getPlaylists(locale).catch(() => [])).length > 0;
   const clientMessages: ClientMessages = { newsletter, actions, language, header, nav };
 
   return (
@@ -57,7 +60,7 @@ export default async function RootLayout({ children, params }: Readonly<LayoutPr
           >
             {messages.common.skipToContent}
           </a>
-          <Header />
+          <Header showVideo={showVideo} />
           <main id="main-content">{children}</main>
           <Footer locale={locale} />
         </I18nProvider>

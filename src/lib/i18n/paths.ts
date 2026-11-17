@@ -7,6 +7,7 @@ import { DEFAULT_LOCALE, LOCALES, type Locale } from './config';
 export const SECTIONS = {
   blog: { it: 'blog', en: 'blog', ru: 'blog' },
   tutorial: { it: 'tutorial', en: 'tutorials', ru: 'uroki' },
+  video: { it: 'video', en: 'videos', ru: 'video' },
   search: { it: 'search', en: 'search', ru: 'poisk' },
   'chi-siamo': { it: 'chi-siamo', en: 'about', ru: 'o-nas' },
   contatti: { it: 'contatti', en: 'contact', ru: 'kontakty' },
@@ -75,7 +76,7 @@ export function toInternalSegments(pathname: string, locale: Locale): string[] {
  */
 export function switchLocalePath(pathname: string, from: Locale, to: Locale): string {
   const internal = toInternalSegments(pathname, from);
-  const isContentPage = (internal[0] === 'blog' || internal[0] === 'tutorial') && internal.length > 1;
+  const isContentPage = (internal[0] === 'blog' || internal[0] === 'tutorial' || internal[0] === 'video') && internal.length > 1;
   const target = isContentPage ? internal.slice(0, 1) : internal;
   return localizedPath(to, `/${target.join('/')}`);
 }

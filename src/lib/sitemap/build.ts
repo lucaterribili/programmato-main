@@ -2,6 +2,7 @@ import config from '@/lib/config';
 import { HREFLANG, LOCALES, isLocale, type Locale } from '@/lib/i18n/config';
 import { localizedPath } from '@/lib/i18n/paths';
 import { fetchSitemapEntries } from './fetch';
+import videoService from '@/lib/services/video';
 import type { EntryType, SitemapAlternate, SitemapEntry } from './types';
 import type { RenderedUrl } from './xml';
 
@@ -142,6 +143,36 @@ export async function buildLocaleSitemap(locale: Locale): Promise<LocaleSitemap>
     }
   } catch (error) {
     console.error(`Sitemap ${locale}: backend non disponibile`, error);
+  }
+
+  // le playlist e i video (nella lingua della sitemap): vengono dal catalogo delle playlist, non dalle voci di sitemap
+  try {
+    const playlists = await videoService.getPlaylists(locale);
+    if (playlists.length > 0) {
+      const listLoc = `${SITE()}${localizedPath(locale, '/video')}`;
+      urls.set(listLoc, { loc: listLoc, changefreq: 'weekly', priority: 0.6, alternates: hreflangLinks({ [locale]: '/video' }) });
+    }
+    for (const playlist of playlists) {
+      const playlistPath = `/video/${encodeURIComponent(playlist.slug)}`;
+      const playlistLoc = `${SITE()}${localizedPath(locale, playlistPath)}`;
+      urls.set(playlistLoc, { loc: playlistLoc, changefreq: 'weekly', priority: 0.6, alternates: hreflangLinks({ [locale]: playlistPath }) });
+      const { videos } = await videoService.getPlaylist(playlist.slug, locale);
+      for (const video of videos) {
+        const path = `${playlistPath}/${encodeURIComponent(video.slug)}`;
+        const loc = `${SITE()}${localizedPath(locale, path)}`;
+        const entryLastmod = toIso(video.publishedAt);
+        if (entryLastmod && (!lastmod || entryLastmod > lastmod)) lastmod = entryLastmod;
+        urls.set(loc, {
+          loc,
+          ...(entryLastmod ? { lastmod: entryLastmod } : {}),
+          changefreq: 'monthly',
+          priority: 0.7,
+          alternates: hreflangLinks({ [locale]: path }),
+        });
+      }
+    }
+  } catch (error) {
+    console.error(`Sitemap ${locale}: video non disponibili`, error);
   }
 
   return { urls: [...urls.values()], lastmod };

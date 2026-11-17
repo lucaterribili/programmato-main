@@ -13,7 +13,7 @@ export const en: Messages = {
 
   common: {
     skipToContent: 'Skip to content',
-    nav: { fieldNotes: 'Field notes', playbook: 'Playbook', manifesto: 'Manifesto' },
+    nav: { fieldNotes: 'Field notes', playbook: 'Playbook', video: 'Video', manifesto: 'Manifesto' },
     header: {
       topbarNote: 'AI and agents, from prototype to production',
       secondaryLinks: 'Secondary links',
@@ -255,6 +255,32 @@ export const en: Messages = {
     topics: 'Topics',
     keepReading: 'Keep reading',
     related: 'Related articles',
+  },
+
+  video: {
+    metaTitle: 'Videos',
+    metaDescription: 'Programmato videos and playlists: demos, walkthroughs and deep dives on AI and agents.',
+    pill: 'Video',
+    title: 'Videos and playlists',
+    lede: 'Demos and walkthroughs grouped in playlists: see how it is built, not just how it is told.',
+    count: plural({ one: '{n} playlist', other: '{n} playlists' }),
+    videos: plural({ one: '{n} video', other: '{n} videos' }),
+    emptyEyebrow: 'Coming soon',
+    emptyTitle: 'The first videos are on their way.',
+    emptyCopy: 'We are preparing the first playlists. Check back soon.',
+    emptyOtherLanguage: 'There are no videos in this language yet. The available videos are in Italian.',
+    emptyPlaylist: 'This playlist has no videos yet.',
+    unavailableTitle: 'This video is not here (yet).',
+    unavailableCopy: 'It may have been moved, or the editorial service may be temporarily unreachable.',
+    backToVideos: 'All videos',
+    backToPlaylist: 'Back to the playlist',
+    duration: 'Duration',
+    published: 'Published',
+    speed: 'Speed',
+    playerError: 'The video could not be loaded.',
+    openInNewTab: 'Open it in a new tab',
+    noVideoSupport: 'Your browser does not support video playback.',
+    inThisPlaylist: 'In this playlist',
   },
 
   tutorial: {

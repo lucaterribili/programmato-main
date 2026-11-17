@@ -3,4 +3,4 @@ export * from './article';
 export * from './tutorial';
 export * from './homepage';
 export * from './author';
-export * from './newsletter';
+export * from './newsletter';export * from './video';

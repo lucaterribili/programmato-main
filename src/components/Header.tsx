@@ -7,7 +7,8 @@ import { useHref, useI18n } from '@/lib/i18n/client';
 import { toInternalSegments } from '@/lib/i18n/paths';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
-export function Header() {
+/** `showVideo`: la voce Video compare solo se il dominio ha almeno una playlist. */
+export function Header({ showVideo = false }: { showVideo?: boolean }) {
   const pathname = usePathname();
   const href = useHref();
   const { locale, messages } = useI18n();
@@ -16,6 +17,7 @@ export function Header() {
   const navItems = [
     { path: '/blog', label: messages.nav.fieldNotes },
     { path: '/tutorial', label: messages.nav.playbook },
+    ...(showVideo ? [{ path: '/video', label: messages.nav.video }] : []),
     { path: '/chi-siamo', label: messages.nav.manifesto },
   ];
 

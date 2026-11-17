@@ -7,4 +7,4 @@ export { default as authorService } from './author';
 export { default as searchService } from './search';
 export { default as newsletterService } from './newsletter';
 export { default as imageService } from './image';
-export { default as ContentService } from './content';
+export { default as ContentService } from './content';export { default as videoService } from './video';

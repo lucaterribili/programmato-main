@@ -11,7 +11,7 @@ export const ru: Messages = {
 
   common: {
     skipToContent: 'Перейти к содержимому',
-    nav: { fieldNotes: 'Полевые заметки', playbook: 'Руководства', manifesto: 'Манифест' },
+    nav: { fieldNotes: 'Полевые заметки', playbook: 'Руководства', video: 'Видео', manifesto: 'Манифест' },
     header: {
       topbarNote: 'ИИ и агенты: от прототипа к продакшену',
       secondaryLinks: 'Дополнительные ссылки',
@@ -258,6 +258,32 @@ export const ru: Messages = {
     topics: 'Темы',
     keepReading: 'Читайте дальше',
     related: 'Похожие статьи',
+  },
+
+  video: {
+    metaTitle: 'Видео',
+    metaDescription: 'Видео и плейлисты Programmato: демонстрации, разборы и углублённые материалы об ИИ и агентах.',
+    pill: 'Видео',
+    title: 'Видео и плейлисты',
+    lede: 'Демонстрации и разборы, собранные в плейлисты: смотрите, как это строится, а не только как об этом рассказывают.',
+    count: plural({ one: '{n} плейлист', few: '{n} плейлиста', many: '{n} плейлистов', other: '{n} плейлиста' }),
+    videos: plural({ one: '{n} видео', few: '{n} видео', many: '{n} видео', other: '{n} видео' }),
+    emptyEyebrow: 'Скоро',
+    emptyTitle: 'Первые видео уже в пути.',
+    emptyCopy: 'Мы готовим первые плейлисты. Загляните к нам скоро.',
+    emptyOtherLanguage: 'На этом языке видео пока нет. Доступные видео — на итальянском.',
+    emptyPlaylist: 'В этом плейлисте пока нет видео.',
+    unavailableTitle: 'Этого видео нет (пока).',
+    unavailableCopy: 'Возможно, оно было перемещено, либо редакционный сервис временно недоступен.',
+    backToVideos: 'Все видео',
+    backToPlaylist: 'Вернуться к плейлисту',
+    duration: 'Длительность',
+    published: 'Опубликовано',
+    speed: 'Скорость',
+    playerError: 'Не удалось загрузить видео.',
+    openInNewTab: 'Открыть в новой вкладке',
+    noVideoSupport: 'Ваш браузер не поддерживает воспроизведение видео.',
+    inThisPlaylist: 'В этом плейлисте',
   },
 
   tutorial: {
